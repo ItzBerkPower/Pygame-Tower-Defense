@@ -32,21 +32,21 @@ CELL_SIZE = 50
 
 
 grid = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 2],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2],
-    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 2],
-    [1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 2],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2]
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 3],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 3],
+    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 3],
+    [1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 3],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3]
 ]
 
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
@@ -119,19 +119,20 @@ def main():
                         grid_x = x // CELL_SIZE
                         grid_y = y // CELL_SIZE
 
-                        if side_menu_open and x > 430 and x < 615:
-                            if y > 125 and y < 180 and money >= 100:
+                        if side_menu_open and x in range(430,615):
+                            if y in range(125, 180) and money >= 100:
                                 picked_tower = "turret1"
                                 money -= 100
                             
-                            elif y > 275 and y < 330 and money >= 200:
+                            elif y in range(275, 330) and money >= 200:
                                 picked_tower = "turret2"
                                 money -= 200
 
-                            elif y > 430 and y < 480 and money >= 400:
+                            elif y in range(430, 480) and money >= 400:
                                 picked_tower = "turret3"
                                 money -= 400
                         
+
                         if side_menu_open == False and picked_tower != None:
                             if grid[grid_y][grid_x] == 0:
                                 if level_start:
@@ -139,10 +140,36 @@ def main():
                                     all_towers.append(tower)
                                     picked_tower = None
 
+                                    #grid[grid_y][grid_x] = 2
+
+
+
                                 else:                                    
                                     tower = Tower((grid_x, grid_y), CELL_SIZE, picked_tower, 1)
                                     temp_towers.append(tower)
-                                    picked_tower = None                    
+                                    picked_tower = None         
+
+                                    #grid[grid_y][grid_x] = 2    
+                            
+                            # STUB: Upgrading towers
+                            '''
+                            elif grid[grid_y][grid_x] == 2:
+                                if level_start:
+                                    for tower in all_towers:
+                                        if tower.position[0] == grid_x and tower.position[1] == grid_y:
+                                            if tower.can_upgrade(money):
+                                                print('boo')
+                                                money = tower.upgrade_tower(money)
+                                
+                                else:
+                                    for tower in temp_towers:
+                                        if tower.position[0] == grid_x and tower.position[1] == grid_y:
+                                            if tower.can_upgrade(money):
+                                                print('boo')
+                                                money = tower.upgrade_tower(money)
+
+                            '''
+                               
 
 
             elif event.type == pygame.KEYDOWN:
@@ -161,9 +188,8 @@ def main():
             if not game_start:
                 screen.fill((0,0,0))
 
-                level_text = level_font.render(f"Level: {level}", True, (255,0,0))
+                level_text(screen, level)
 
-                screen.blit(level_text, (150,375))
                 pygame.display.flip()
                 pygame.time.delay(2000)
 
@@ -210,7 +236,7 @@ def main():
 
 
 
-                    enemy_spawn_interval = (level * 1000) * 0.75
+                    enemy_spawn_interval = (level * 500) * 1.25
 
                     if level == 1:
                         enemy_spawn_interval = 1000
@@ -227,7 +253,7 @@ def main():
                             all_enemies.append(enemy)
                             level_enemies_count[0] += 1
 
-                        elif enemy_chooser == 2 and level_enemies[1] < level_enemies[1]:
+                        elif enemy_chooser == 2 and level_enemies_count[1] < level_enemies[1]:
                             enemy = Enemy(2, CELL_SIZE)
                             all_enemies.append(enemy)
                             level_enemies_count[1] += 1
@@ -243,21 +269,22 @@ def main():
 
                             tower.draw(screen)
 
-                            
-                            if tower.can_shoot():
-                                if len(all_enemies) > 0:
-                                    all_enemies[0].be_shot(all_enemies)
-                                    money += 2  
+                            if len(all_enemies) > 0:
+                                if tower.can_shoot(all_enemies[0].time_after_spawn):
                                     tower.shoot()
+                                    money += 2
+
+                                    all_enemies[0].be_shot(all_enemies)
                                     shooting_clock.tick(60)
                                     total_shooting_time += shooting_clock.get_time()
 
                                     if total_shooting_time > 2000:
                                         tower.revert_image()
                                         total_shooting_time = 0
-                                        print("e")
                                 
-    
+
+
+
 
                                 #all_enemies.remove(all_enemies[0])
                                 
@@ -290,6 +317,7 @@ def main():
                             
                             else:
                                 enemy.previous_position = enemy.current_position
+
                         
                         
                         
@@ -335,6 +363,11 @@ def main():
 
                     main_menu_open = True
                     game_over(screen, main_menu_bg, level)
+
+
+                money_text = font.render(f"Money: {money}", True, (255,255,255))
+                money_rect = money_text.get_rect(center = (90,20))
+                screen.blit(money_text, money_rect)
         
         # Clear the screen
         pygame.display.flip()

@@ -21,11 +21,10 @@ class Tower(pygame.sprite.Sprite):
 
         self.shooting_image = None
 
-
-        # Firing rate in milliseconds (e.g., 1000 milliseconds = 1 second)
-        self.firing_rate = 1500
+        self.firing_rate = self.get_firing_rate()
         self.last_shot_time = pygame.time.get_ticks()
     
+
     def load_images(self):
         image_paths = {
             'turret1': ['1_1.png', '1_2.png', '1_3.png', '1_4.png'],
@@ -43,6 +42,16 @@ class Tower(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.position[0] * self.CELL_SIZE + self.CELL_SIZE / 2,
                                                  self.position[1] * self.CELL_SIZE + self.CELL_SIZE / 2))
         
+    
+    def get_firing_rate(self):
+        if self.turret_type == "turret1":
+            return 2000
+
+        elif self.turret_type == "turret2":
+            return 1750
+
+        elif self.turret_type == "turret3":
+            return 1500
 
 
 
@@ -57,27 +66,54 @@ class Tower(pygame.sprite.Sprite):
         self.angle = self.angle
 
 
-
     def draw(self, screen):
         rotated_surface = pygame.transform.rotate(self.image, self.angle)
         rotated_rect = rotated_surface.get_rect(center=self.rect.center)
         screen.blit(rotated_surface, rotated_rect.topleft)
 
 
-    def can_shoot(self):
+    def can_shoot(self, time_after_enemy_spawn):
         current_time = pygame.time.get_ticks()
         elapsed_time = current_time - self.last_shot_time
-        return elapsed_time >= self.firing_rate
+        return (elapsed_time >= self.firing_rate) and time_after_enemy_spawn > 1000
 
     def shoot(self):
         # Perform shooting action here
         self.image = pygame.image.load(self.shooting_image_path).convert_alpha()
         self.last_shot_time = pygame.time.get_ticks()  # Update last shot time after shooting
-
+        
     
     def revert_image(self):
         self.image = pygame.image.load(self.image_path)
 
+    def can_upgrade(self, money):
+        upgrade_prices = {
+            'turret1': [0, 100, 125, 150],
+            'turret2': [0, 200, 250, 300],
+            'turret3': [0, 400, 500]
+        }
+
+        if money >= upgrade_prices[self.turret_type][self.upgrade_level]:
+            return True
+        
+        else:
+            return False
+        
+        
+    def upgrade_tower(self, money):
+
+        upgrade_prices = {
+            'turret1': [0, 100, 125, 150],
+            'turret2': [0, 200, 250, 300],
+            'turret3': [0, 400, 500]
+        }
+
+        self.firing_rate -= 100
+        self.upgrade_level += 1
+
+        money -= upgrade_prices[self.turret_type][self.upgrade_level - 1]
+
+        return money
 
 
 

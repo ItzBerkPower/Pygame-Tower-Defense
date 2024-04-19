@@ -14,6 +14,8 @@ class Enemy(pygame.sprite.Sprite):
         self.previous_position = None
         self.visited_set = set()
 
+        self.time_after_spawn = pygame.time.get_ticks()
+
         self.enemy1_image = pygame.image.load('images/enemy/enemy1.png').convert_alpha()
         pygame.transform.scale(self.enemy1_image, (50, 50))
 
@@ -52,20 +54,8 @@ class Enemy(pygame.sprite.Sprite):
 
         if grid[y][x] == 1:
             prev_states[(x * self.CELL_SIZE, y * self.CELL_SIZE)] = screen.copy().subsurface((x * self.CELL_SIZE, y * self.CELL_SIZE, self.CELL_SIZE, self.CELL_SIZE))
-            '''
-            #pygame.draw.rect(screen, colour, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-            #screen.blit(self.enemy1_image, (x * self.CELL_SIZE, y * self.CELL_SIZE))
-            self.rect = pygame.Rect(x * self.CELL_SIZE, y * self.CELL_SIZE, self.CELL_SIZE, self.CELL_SIZE)
-            rotated_surface = pygame.transform.rotate(self.enemy1_image, self.angle)
-            rotated_rect = rotated_surface.get_rect(center=self.rect.center)
-            screen.blit(rotated_surface, rotated_rect.topleft)
-            pygame.display.flip()
-            pygame.time.delay(200)
-            '''
-
 
         # Define adjacent positions
-        #adjacent_positions = [(x+1, y), (x, y+1), (x-1, y), (x, y-1)]
         adjacent_positions = [(x+self.speed, y), (x, y+self.speed), (x-self.speed, y), (x, y-self.speed), (x+1, y), (x, y+1), (x-1, y), (x, y-1)]
 
         # Explore adjacent cells one by one
@@ -97,6 +87,8 @@ class Enemy(pygame.sprite.Sprite):
                             except:
                                 continue    
                     '''
+
+
                     # Handle turns
                     if (x, y) != (next_pos[0], y) and (x, y) != (x, next_pos[1]):
                         # Check if the next position is reachable
@@ -121,10 +113,12 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self, screen, grid, prev_states):
         x,y = self.current_position
         if grid[y][x] == 1:
-            #pygame.draw.rect(screen, colour, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-            #screen.blit(self.enemy1_image, (x * self.CELL_SIZE, y * self.CELL_SIZE))
+            self.time_after_spawn = pygame.time.get_ticks()
             self.rect = pygame.Rect(x * self.CELL_SIZE, y * self.CELL_SIZE, self.CELL_SIZE, self.CELL_SIZE)
-            rotated_surface = pygame.transform.rotate(self.enemy1_image, self.angle)
+            if self.speed == 1:
+                rotated_surface = pygame.transform.rotate(self.enemy1_image, self.angle)
+            elif self.speed == 2:
+                rotated_surface = pygame.transform.rotate(self.enemy2_image, self.angle)
             rotated_rect = rotated_surface.get_rect(center=self.rect.center)
             screen.blit(rotated_surface, rotated_rect.topleft)
             pygame.display.flip()

@@ -1,16 +1,21 @@
 import pygame, sys
 
+# Button class
 class Button():
 	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
 		self.image = image
-		self.x_pos = pos[0]
-		self.y_pos = pos[1]
+		self.x_pos, self.y_pos = pos
+	
 		self.font = font
 		self.base_color, self.hovering_color = base_color, hovering_color
+          
 		self.text_input = text_input
+          
 		self.text = self.font.render(self.text_input, True, self.base_color)
+          
 		if self.image is None:
 			self.image = self.text
+               
 		self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
 		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
@@ -19,16 +24,19 @@ class Button():
 			screen.blit(self.image, self.rect)
 		screen.blit(self.text, self.text_rect)
 
-	def checkForInput(self, position):
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			return True
-		return False
 
 	def changeColor(self, position):
 		if self.checkForInput(position):
 			self.text = self.font.render(self.text_input, True, self.hovering_color)
 		else:
 			self.text = self.font.render(self.text_input, True, self.base_color)
+            
+
+	def checkForInput(self, position):
+		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+			return True
+		return False
+
 
 
 pygame.init()
@@ -36,8 +44,11 @@ pygame.init()
 
 pygame.display.set_caption("Menu")
 
+
 def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font("assets/font.ttf", size)
+    return pygame.font.Font("fonts/blocky_font.ttf", size)
+
+
     
 def controls(screen, background):
     controls = True
@@ -93,13 +104,13 @@ def main_menu(screen, background):
         MENU_TEXT = get_font(60).render("MAIN MENU", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center = (375, 100))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos = (375, 210), 
+        PLAY_BUTTON = Button(image=pygame.image.load("fonts/font_backgrounds/Play Rect.png"), pos = (375, 210), 
                             text_input="PLAY", font = get_font(70), base_color = "#d7fcd4", hovering_color = "White")
         
-        CONTROLS_BUTTON = Button(image=pygame.image.load("assets/Controls Rect.png"), pos = (375, 375), 
+        CONTROLS_BUTTON = Button(image=pygame.image.load("fonts/font_backgrounds/Controls Rect.png"), pos = (375, 375), 
                             text_input="CONTROLS", font = get_font(70), base_color = "#d7fcd4", hovering_color = "White")
         
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos = (375, 540), 
+        QUIT_BUTTON = Button(image=pygame.image.load("fonts/font_backgrounds/Quit Rect.png"), pos = (375, 540), 
                             text_input="QUIT", font = get_font(70), base_color = "#d7fcd4", hovering_color = "White")
 
         screen.blit(MENU_TEXT, MENU_RECT)
@@ -165,5 +176,9 @@ def game_over(screen, background, level):
         pygame.display.update()
 
 
-      
 
+
+def level_text(screen, level):
+    LEVEL_TEXT = get_font(40).render(f"Level: {level}", True, "#b68f40")
+    LEVEL_RECT = LEVEL_TEXT.get_rect(center = (375, 375))
+    screen.blit(LEVEL_TEXT, LEVEL_RECT)

@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, speed, CELL_SIZE):
@@ -180,6 +181,56 @@ class Enemy(pygame.sprite.Sprite):
                 for i in range(self.speed):
                     self.visited_set.add((x, y + i))
         
-    def be_shot(self):
+    def be_shot(self, all_enemies):
         self.current_position = None
+        all_enemies.remove(self)
+
         return True
+
+def get_enemies_for_level(level, level_enemies):
+    level_enemies[0] = level * 2
+    level_enemies[1] = level * 1
+
+    if level == 1:
+        level_enemies[1] = 0
+
+    return True
+ 
+    
+def make_enemies_for_level(spawn_timer, all_enemies, level, CELL_SIZE, level_enemies, level_enemies_count):
+    current_time = pygame.time.get_ticks()
+    print(current_time)
+
+
+    enemy_spawn_interval = (level * 1000) * 0.75
+
+    if level == 1:
+        enemy_spawn_interval = 4000
+
+    print("enemy spawn interval = ", enemy_spawn_interval)
+    print("subtraction = ", (current_time - spawn_timer))
+    print("spawn", spawn_timer)
+
+    if (current_time - spawn_timer) > enemy_spawn_interval:
+        spawn_timer = current_time
+
+        
+        enemy_chooser = random.randint(1,2)
+        if enemy_chooser == 1 and level_enemies_count[0] < level_enemies[0]:
+            print("can change spanw timer")
+            enemy = Enemy(1, CELL_SIZE)
+            all_enemies.append(enemy)
+            level_enemies_count[0] += 1
+
+        elif enemy_chooser == 2 and level_enemies_count[1] < level_enemies[1]:
+            enemy = Enemy(2, CELL_SIZE)
+            all_enemies.append(enemy)
+            level_enemies_count[1] += 1
+    
+    return True
+
+
+
+
+
+

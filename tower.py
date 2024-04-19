@@ -53,6 +53,9 @@ class Tower(pygame.sprite.Sprite):
         angle_rad = math.atan2(dy, dx)
         self.angle = -math.degrees(angle_rad)
 
+    def default_angle(self):
+        self.angle = self.angle
+
 
 
     def draw(self, screen):

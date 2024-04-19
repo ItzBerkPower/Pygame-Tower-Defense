@@ -6,7 +6,7 @@ import time
 
 from draw_grid_functions import draw_custom_grid, fadein, fadeout
 from tower import Tower
-from enemy import Enemy
+from enemy import Enemy, make_enemies_for_level, get_enemies_for_level
 from maps import *
 from menu import *
 from images import *
@@ -74,17 +74,20 @@ tower = None
 
 all_enemies = []
 all_towers = []
+temp_towers = []
 
 side_menu_open = False
 main_menu_open = True
 
-level = 0 
+level = 1
 level_start = False
 game_start = False
 
 spawn_timer = 0
 enemy_spawn_interval = 1000
-enemies = 5
+
+level_enemies = [0,0]
+level_enemies_count = [0,0]
 
 total_shooting_time = 0
 
@@ -92,12 +95,15 @@ picked_tower = None
 
 money = 200
 
+health = 100
+
 # Main game loop
 def main():
-    global tower, all_enemies, side_menu_open, main_menu_open
-    global enemy_spawn_interval, enemies, spawn_timer, total_shooting_time
-    global money, level, level_start, game_start
-    global picked_tower, all_towers
+    global tower, all_towers, picked_tower
+    global all_enemies, enemy_spawn_interval, spawn_timer, total_shooting_time, level_enemies, level_enemies_count
+    global money, health
+    global level, level_start, game_start
+    global side_menu_open, main_menu_open
 
     running = True
     while running:
@@ -112,8 +118,6 @@ def main():
 
                         grid_x = x // CELL_SIZE
                         grid_y = y // CELL_SIZE
-
-                        print(x,y)
 
                         if side_menu_open and x > 430 and x < 615:
                             if y > 125 and y < 180 and money >= 100:
@@ -130,9 +134,15 @@ def main():
                         
                         if side_menu_open == False and picked_tower != None:
                             if grid[grid_y][grid_x] == 0:
-                                tower = Tower((grid_x, grid_y), CELL_SIZE, picked_tower, 1)
-                                all_towers.append(tower)
-                                picked_tower = None
+                                if level_start:
+                                    tower = Tower((grid_x, grid_y), CELL_SIZE, picked_tower, 1)
+                                    all_towers.append(tower)
+                                    picked_tower = None
+
+                                else:                                    
+                                    tower = Tower((grid_x, grid_y), CELL_SIZE, picked_tower, 1)
+                                    temp_towers.append(tower)
+                                    picked_tower = None                    
 
 
             elif event.type == pygame.KEYDOWN:
@@ -163,35 +173,14 @@ def main():
                 game_start = True
                 
 
-            #fadeout(screen)
             if game_start:
                 draw_custom_grid(screen, grid, CELL_SIZE, path_image, grass_image)
                 
                 mouse_x, mouse_y = pygame.mouse.get_pos()
 
-                if tower in all_towers:
-                    for tower in all_towers:
-
-                        try:
-                            tower.update_angle((all_enemies[0].previous_position[0], all_enemies[0].previous_position[1]))
-                        except:
-                            continue
+                if tower in temp_towers:
+                    for tower in temp_towers:
                         tower.draw(screen)
-
-
-                        if tower.can_shoot():
-                            tower.shoot()
-                            shooting_clock.tick(60)
-                            total_shooting_time += shooting_clock.get_time()
-                            enemy.be_shot()
-
-                            money += 2  
-                            all_enemies.remove(enemy)
-
-                            if total_shooting_time > 2000:
-                                tower.revert_image()
-                                total_shooting_time = 0
-                                print("e")
 
 
                 if side_menu_open:
@@ -211,41 +200,141 @@ def main():
                         side_menu_open = True
                     
 
-                if level_start:
-
-
-                    # Enemy
+                if level_start and health > 0:
+                    get_enemies_for_level(level, level_enemies)
                     current_time = pygame.time.get_ticks()
-                    if current_time - spawn_timer > enemy_spawn_interval and len(all_enemies) < enemies:
-                        enemy = Enemy(2, CELL_SIZE)
-                        all_enemies.append(enemy)
+
+                    for i in range(len(temp_towers)):
+                        all_towers.append(temp_towers[i])
+                    temp_towers.clear()
+
+
+
+                    enemy_spawn_interval = (level * 1000) * 0.75
+
+                    if level == 1:
+                        enemy_spawn_interval = 1000
+
+
+                    if (current_time - spawn_timer) > enemy_spawn_interval:
                         spawn_timer = current_time
 
-
-
-                    for enemy in all_enemies:
-                        prev_states = {}
-                        #enemy.current_position = dfs(screen, CELL_SIZE, grid, enemy.current_position, enemy.visited_set, prev_states, enemy.colour, enemy.speed, enemy.enemy1_image)
-                        enemy.current_position = enemy.dfs(screen, grid, prev_states)
                         
-                        if enemy.current_position == enemy.previous_position:
-                            enemy.visited_set.clear()
-                            enemy.current_position = None
-                            all_enemies.remove(enemy)
+                        enemy_chooser = random.randint(1,3)
+                        print("chooser", enemy_chooser)
+                        if (enemy_chooser == 1 or enemy_chooser == 3) and level_enemies_count[0] < level_enemies[0]:
+                            enemy = Enemy(1, CELL_SIZE)
+                            all_enemies.append(enemy)
+                            level_enemies_count[0] += 1
+
+                        elif enemy_chooser == 2 and level_enemies[1] < level_enemies[1]:
+                            enemy = Enemy(2, CELL_SIZE)
+                            all_enemies.append(enemy)
+                            level_enemies_count[1] += 1
+
+
+                    if tower in all_towers:
+                        for tower in all_towers:
+
+                            try:
+                                tower.update_angle((all_enemies[0].previous_position[0], all_enemies[0].previous_position[1]))
+                            except:
+                                tower.default_angle()
+
+                            tower.draw(screen)
+
+                            
+                            if tower.can_shoot():
+                                if len(all_enemies) > 0:
+                                    all_enemies[0].be_shot(all_enemies)
+                                    money += 2  
+                                    tower.shoot()
+                                    shooting_clock.tick(60)
+                                    total_shooting_time += shooting_clock.get_time()
+
+                                    if total_shooting_time > 2000:
+                                        tower.revert_image()
+                                        total_shooting_time = 0
+                                        print("e")
+                                
+    
+
+                                #all_enemies.remove(all_enemies[0])
+                                
+
+
+
+
+
+
+                    #make_enemies_for_level(spawn_timer, all_enemies, level, CELL_SIZE, level_enemies, level_enemies_count)
+
+
+
+                    if len(all_enemies) > 0:
+                        for enemy in all_enemies:
+                            prev_states = {}
+                            #enemy.current_position = dfs(screen, CELL_SIZE, grid, enemy.current_position, enemy.visited_set, prev_states, enemy.colour, enemy.speed, enemy.enemy1_image)
+                            enemy.current_position = enemy.dfs(screen, grid, prev_states)
+                            
+                            if enemy.current_position == enemy.previous_position:           
+                                enemy.visited_set.clear()
+                                enemy.current_position = None
+                                all_enemies.remove(enemy)
+
+                                if enemy.speed == 1:
+                                    health -= 50
+                                
+                                elif enemy.speed == 2:
+                                    health -= 20
+                            
+                            else:
+                                enemy.previous_position = enemy.current_position
                         
-                        else:
-                            enemy.previous_position = enemy.current_position
-                    
-
-                    for enemy in all_enemies:
-                        enemy.draw(screen, grid, prev_states)
-                    pygame.time.delay(200)
+                        
+                        
 
 
+                        for enemy in all_enemies:
+                            enemy.draw(screen, grid, prev_states)
+                        pygame.time.delay(200)
 
-                money_text = font.render(f"Money: {money}", True, (255,255,255))
-                money_rect = money_text.get_rect(center = (90,20))
-                screen.blit(money_text, money_rect)
+
+                    # Level beaten
+                    if level_enemies == level_enemies_count and len(all_enemies) == 0:
+                        print("wohoo")
+                        level += 1
+                        game_start = False
+                        level_start = False
+
+                        level_enemies_count[0] = 0
+                        level_enemies_count[1] = 0
+
+                        current_time = 0
+                        spawn_timer = 0
+
+                        for tower in all_towers:
+                            if tower.turret_type == "turret1":
+                                money += 100
+                            
+                            elif tower.turret_type == "turret2":
+                                money += 200
+                            
+                            elif tower.turret_type == "turret3":
+                                money += 400
+                        
+                        all_towers.clear()
+
+                if health <= 0:
+                    screen.fill((0,0,0))
+
+                    game_start = False
+                    level_start = False
+
+                    pygame.time.delay(2000)
+
+                    main_menu_open = True
+                    game_over(screen, main_menu_bg, level)
         
         # Clear the screen
         pygame.display.flip()

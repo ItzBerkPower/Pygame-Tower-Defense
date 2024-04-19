@@ -126,4 +126,44 @@ def main_menu(screen, background):
     return
 
 
+def game_over(screen, background, level):
+    GAME_OVER_MOUSE_POS = pygame.mouse.get_pos()
+    game_over = True
+
+    while game_over:
+        screen.fill((0,0,0))
+
+        GAME_OVER_TEXT = get_font(60).render("GAME OVER", True, "#b68f40")
+        GAME_OVER_RECT = GAME_OVER_TEXT.get_rect(center = (375, 100))
+        screen.blit(GAME_OVER_TEXT, GAME_OVER_RECT)
+
+        FINAL_LEVEL_TEXT = get_font(20).render(f"Final Level: {level}", True, "White")
+        FINAL_LEVEL_RECT = FINAL_LEVEL_TEXT.get_rect(center = (375, 200))
+        screen.blit(FINAL_LEVEL_TEXT, FINAL_LEVEL_RECT)
+
+        BYE_BYE_TEXT = get_font(20).render("Bye bye!", True, "White")
+        BYE_BYE_RECT = BYE_BYE_TEXT.get_rect(center = (375, 450))
+        screen.blit(BYE_BYE_TEXT, BYE_BYE_RECT)
+        
+        # STUB: Adding back button on main menu
+        '''
+        GAME_OVER_BACK = Button(image=None, pos=(375, 450), text_input="BACK", font=get_font(20), base_color="White", hovering_color="Green")
+
+        GAME_OVER_BACK.changeColor(GAME_OVER_MOUSE_POS)
+        GAME_OVER_BACK.update(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if GAME_OVER_BACK.checkForInput(GAME_OVER_MOUSE_POS):
+                    main_menu(screen, background)
+                    game_over = False
+        '''
+
+        pygame.display.update()
+
+
+      
 

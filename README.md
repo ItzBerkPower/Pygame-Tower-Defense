@@ -34,14 +34,14 @@ draw_grid_functions.py - Drawing the grid
 Game Design Documentation.docx - Documentation for the game
 
 \
-\
+
 
 'testing' Folder:
 mouse_testing.py - Unit testing mouse coordinates
 testing_maps.py - Testing different maps to see if enemies can traverse the map
 
 \
-\
+
 
 'images' Folder:
 grass.png - Grass picture

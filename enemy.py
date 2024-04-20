@@ -300,7 +300,7 @@ def enemy_functionality(screen, all_enemies, health, grid):
 
                 # If enemy is level 1, remove 20 health
                 if enemy.speed == 1:
-                    health -= 20
+                    health -= 50
 
                 # If enemy is level 2, remove 40 health  
                 elif enemy.speed == 2:

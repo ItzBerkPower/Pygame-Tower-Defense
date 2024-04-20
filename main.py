@@ -7,7 +7,6 @@ import time
 from draw_grid_functions import draw_custom_grid
 from tower import Tower, tower_functionality
 from enemy import Enemy, make_enemies_for_level, get_enemies_for_level, enemy_functionality
-from maps import *
 from menu import *
 from images import *
 from game_functions import * 
@@ -15,22 +14,16 @@ from game_functions import *
 # Initialize Pygame
 pygame.init()
 
-# Initialize the font
-pygame.font.init()
-font = pygame.font.Font("fonts/Arial.ttf", 30)  # You can adjust the font size here
-level_font = pygame.font.Font("fonts/Arial.ttf", 90)
-
 clock = pygame.time.Clock()
-
 shooting_clock = pygame.time.Clock()
 
+# Constants
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 750
 
 GRID_ROWS = 15
 GRID_COLUMNS = 15
 CELL_SIZE = 50
-
 
 grid = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
@@ -49,6 +42,8 @@ grid = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3]
 ]
+
+
 
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
@@ -95,26 +90,28 @@ total_shooting_time = 0
 picked_tower = None
 
 money = 200
-
 health = 100
 
 # Main game loop
 def main():
+    # Globalising all the variables
     global tower, all_towers, temp_towers, picked_tower
     global all_enemies, enemy_spawn_interval, spawn_timer, total_shooting_time, level_enemies, level_enemies_count
     global money, health
     global level, level_start, game_start
     global side_menu_open, main_menu_open
-
+    
+    # Game loop
     running = True
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: # If player clicks X in top right corner, quit game
                 running = False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
+                x, y = event.pos # Get mouse coordinates    3
 
+                # Position of mouse in respect to the grid
                 grid_x = x // CELL_SIZE
                 grid_y = y // CELL_SIZE
 
@@ -265,8 +262,9 @@ def main():
                     pygame.time.delay(2000) # Pause for 2 seconds to remind the player they died
                     
                     # Open the game over screen (Explained in actual function)
-                    main_menu_open = True
                     game_over(screen, main_menu_bg, level)
+                    main_menu_open = True
+
 
                 # Print money and health texts (Explained in actual function)
                 money_text(screen, money)

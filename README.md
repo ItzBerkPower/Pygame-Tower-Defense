@@ -16,10 +16,14 @@ After having these features setup, the next thing needed is the ZIP File. Downlo
 
 Then import the folder with the files onto the IDE, where then when you run the ‘main.py’ file, it should execute the full game.
 \
+\
 **DEPENDENCIES**:
 Only need pygame dependency, to download is mentioned above in 'HOW TO RUN THE GAME'
 \
+\
 **FILES**:
+\
+\
 README.md - README file
 main.py - Main code file, run this file to run the game
 enemy.py - Includes classes and functions about the enemies
@@ -29,9 +33,15 @@ game_functions.py - Miscellaneous functions that don't fit under a category
 draw_grid_functions.py - Drawing the grid
 Game Design Documentation.docx - Documentation for the game
 
+\
+\
+
 'testing' Folder:
 mouse_testing.py - Unit testing mouse coordinates
 testing_maps.py - Testing different maps to see if enemies can traverse the map
+
+\
+\
 
 'images' Folder:
 grass.png - Grass picture

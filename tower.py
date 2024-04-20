@@ -93,7 +93,7 @@ class Tower(pygame.sprite.Sprite):
             'turret3': [0, 400, 500]
         }
 
-        if money >= upgrade_prices[self.turret_type][self.upgrade_level]:
+        if type(upgrade_prices[self.turret_type][self.upgrade_level]) is int and money >= upgrade_prices[self.turret_type][self.upgrade_level]:
             return True
         
         else:
@@ -110,7 +110,7 @@ class Tower(pygame.sprite.Sprite):
 
         self.firing_rate -= 100
         self.upgrade_level += 1
-
+        
         money -= upgrade_prices[self.turret_type][self.upgrade_level - 1]
 
         return money

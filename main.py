@@ -4,7 +4,7 @@ import random
 import math
 import time
 
-from draw_grid_functions import draw_custom_grid, fadein, fadeout
+from draw_grid_functions import draw_custom_grid
 from tower import Tower
 from enemy import Enemy, make_enemies_for_level, get_enemies_for_level
 from maps import *
@@ -134,7 +134,7 @@ def main():
                         
 
                         if side_menu_open == False and picked_tower != None:
-                            if grid[grid_y][grid_x] == 0:
+                            if type(grid_y) is int and type(grid_x) is int and grid[grid_y][grid_x] == 0:
                                 if level_start:
                                     tower = Tower((grid_x, grid_y), CELL_SIZE, picked_tower, 1)
                                     all_towers.append(tower)
@@ -328,30 +328,30 @@ def main():
                         pygame.time.delay(200)
 
 
-                    # Level beaten
+                    # Level beaten if all enemies spawn and no enemies left
                     if level_enemies == level_enemies_count and len(all_enemies) == 0:
-                        print("wohoo")
-                        level += 1
-                        game_start = False
+                        level += 1 # Increase the level by 1
+
+                        game_start = False # Make sure the code that runs if the game or level has started is not being run
                         level_start = False
 
-                        level_enemies_count[0] = 0
-                        level_enemies_count[1] = 0
+                        level_enemies_count[0] = 0 # Reset level 1 & level 2 enemies count
+                        level_enemies_count[1] = 0 
 
-                        current_time = 0
-                        spawn_timer = 0
+                        spawn_timer = 0 # Reset the spawn timer to 0
 
+                        # Refunding the money for the towers, by looping through all the towers
                         for tower in all_towers:
-                            if tower.turret_type == "turret1":
+                            if tower.turret_type == "turret1": # If tower is the 1st tower, compensate 100 back to player
                                 money += 100
                             
-                            elif tower.turret_type == "turret2":
+                            elif tower.turret_type == "turret2": # If tower is the 2nd tower, compensate 200 back to player
                                 money += 200
                             
-                            elif tower.turret_type == "turret3":
+                            elif tower.turret_type == "turret3": # If tower is 3rd tower, compensate 400 back to player
                                 money += 400
                         
-                        all_towers.clear()
+                        all_towers.clear() # Clear all the towers from the list
 
                 if health <= 0:
                     screen.fill((0,0,0))
@@ -365,9 +365,8 @@ def main():
                     game_over(screen, main_menu_bg, level)
 
 
-                money_text = font.render(f"Money: {money}", True, (255,255,255))
-                money_rect = money_text.get_rect(center = (90,20))
-                screen.blit(money_text, money_rect)
+                money_text(screen, money)
+                health_text(screen, health)
         
         # Clear the screen
         pygame.display.flip()

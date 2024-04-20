@@ -6,16 +6,15 @@ from collections import deque
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 750
 
-# Draw grid based on 0s and 1s in the grid
 def draw_custom_grid(screen, grid, CELL_SIZE, path_image, grass_image):
-    # Draw cells based on the values in the 2D array
+    """
+    Draws the map to the screen based on the 2-D grid
+    """
+
     for row_idx, row in enumerate(grid):
         for col_idx, value in enumerate(row):
             if value == 1:
-                '''
-                rect = pygame.Rect(col_idx * CELL_SIZE, row_idx * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-                pygame.draw.rect(screen, (255,255,255), rect, 1)
-                '''
+
                 image_rect = path_image.get_rect()
                 image_rect.topleft = (col_idx * CELL_SIZE, row_idx * CELL_SIZE)
                 screen.blit(path_image, image_rect)
@@ -25,23 +24,6 @@ def draw_custom_grid(screen, grid, CELL_SIZE, path_image, grass_image):
                 image_rect.topleft = (col_idx * CELL_SIZE, row_idx * CELL_SIZE)
                 screen.blit(grass_image, image_rect)
 
-
-def fadeout(screen):
-    fadeout = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT)).convert()
-    fadeout.fill((0,0,0))
-    for i in range(255):
-        fadeout.set_alpha(i)
-        screen.blit(fadeout, (0, 0))
-        pygame.display.update()
-
-
-def fadein(screen):
-    fadein = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT)).convert()
-    fadein.fill((0,0,0))
-    for i in range(255):
-        fadein.set_alpha(255-i)
-        screen.blit(fadein, (0, 0))
-        pygame.display.flip()
 
 '''
 

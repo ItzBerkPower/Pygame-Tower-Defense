@@ -182,3 +182,13 @@ def level_text(screen, level):
     LEVEL_TEXT = get_font(40).render(f"Level: {level}", True, "#b68f40")
     LEVEL_RECT = LEVEL_TEXT.get_rect(center = (375, 375))
     screen.blit(LEVEL_TEXT, LEVEL_RECT)
+
+def money_text(screen, money):
+    MONEY_TEXT = get_font(15).render(f"Money: {money}", True, "White")
+    MONEY_RECT = MONEY_TEXT.get_rect(center = (90, 20))
+    screen.blit(MONEY_TEXT, MONEY_RECT)
+
+def health_text(screen, health):
+    HEALTH_TEXT = get_font(15).render(f"Health: {health}", True, "White")
+    HEALTH_RECT = HEALTH_TEXT.get_rect(center = (640, 20))
+    screen.blit(HEALTH_TEXT, HEALTH_RECT)

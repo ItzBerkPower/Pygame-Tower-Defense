@@ -2,50 +2,72 @@ import pygame, sys
 
 # Button class
 class Button():
-	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
-		self.image = image
-		self.x_pos, self.y_pos = pos
+    # Initialise all the bits needed for class (Variable names self-explanatory)
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+        self.image = image
+        self.x_pos, self.y_pos = pos
 	
-		self.font = font
-		self.base_color, self.hovering_color = base_color, hovering_color
+        self.font = font
+        self.base_color, self.hovering_color = base_color, hovering_color
           
-		self.text_input = text_input
+        self.text_input = text_input
           
-		self.text = self.font.render(self.text_input, True, self.base_color)
+        self.text = self.font.render(self.text_input, True, self.base_color)
           
-		if self.image is None:
-			self.image = self.text
+        if self.image is None:
+            self.image = self.text
                
-		self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
-		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
-	def update(self, screen):
-		if self.image is not None:
-			screen.blit(self.image, self.rect)
-		screen.blit(self.text, self.text_rect)
+    
+    def update(self, screen):
+        """
+        Draw button to screen, parameters: Screen to draw on
+        """
+        # If the button has a backdrop, draw the backdrop
+        if self.image is not None:
+            screen.blit(self.image, self.rect)
+        # Draw the actual button text as well
+        screen.blit(self.text, self.text_rect)
 
 
-	def changeColor(self, position):
-		if self.checkForInput(position):
-			self.text = self.font.render(self.text_input, True, self.hovering_color)
-		else:
-			self.text = self.font.render(self.text_input, True, self.base_color)
+    def changeColor(self, position):
+        """
+        Change colour of button when input, parameters: Position of mouse for input
+        """
+
+        # If player hovers over, change colour of button
+        if self.checkForInput(position):
+            self.text = self.font.render(self.text_input, True, self.hovering_color)
+        
+        # If not, keep base colour
+        else:
+            self.text = self.font.render(self.text_input, True, self.base_color)
             
 
-	def checkForInput(self, position):
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			return True
-		return False
+    def checkForInput(self, position):
+        """
+        Check for player hovering, parameters: Position of mouse
+        """
+
+        # If player hovers over button, return True, otherwise, return False
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            return True
+        return False
 
 
 
 pygame.init()
-
-
 pygame.display.set_caption("Menu")
 
 
-def get_font(size): # Returns Press-Start-2P in the desired size
+def get_font(size):
+    """
+    Get the font size of the blocky font, parameters: Size of font
+    """
+
+    # Return the font with specified size, exiting the functionfil
     return pygame.font.Font("fonts/blocky_font.ttf", size)
 
 
@@ -156,7 +178,7 @@ def game_over(screen, background, level):
         BYE_BYE_RECT = BYE_BYE_TEXT.get_rect(center = (375, 450))
         screen.blit(BYE_BYE_TEXT, BYE_BYE_RECT)
         
-        # STUB: Adding back button on main menu
+        # STUB: Adding back button on ending screen
         '''
         GAME_OVER_BACK = Button(image=None, pos=(375, 450), text_input="BACK", font=get_font(20), base_color="White", hovering_color="Green")
 
